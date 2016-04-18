@@ -1,0 +1,25 @@
+needed
+[x] create account
+[x] verify account
+[x] delete account
+[x] login
+[x] auth
+[x] create chat
+[x] list chats
+[x] close chat
+[x] post message
+[x] list messages
+[x] post broadcast message
+[x] list broadcast messages
+
+messages
+- customer initiates chat with staff
+- these chats have ids
+- table of chats
+- table of messages
+- staff sends broadcast message
+- table of broadcast messages
+
+shelving for now
+[ ] update password
+[ ] store arbitrary data

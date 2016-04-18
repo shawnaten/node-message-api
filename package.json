@@ -1,0 +1,28 @@
+{
+  "name": "rest_api_project",
+  "version": "1.0.0",
+  "description": "RESTful API project for independent study with Dr. Jianwei Niu.",
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt": "^0.8.5",
+    "good": "^6.5.0",
+    "good-console": "^5.3.1",
+    "hapi": "^13.0.0",
+    "hapi-auth-basic": "^4.1.0",
+    "hapi-auth-jwt2": "^5.4.1",
+    "jsonwebtoken": "^5.5.4",
+    "mailgun-js": "^0.7.7",
+    "mongoose": "^4.4.3",
+    "uuid": "^2.0.1"
+  },
+  "devDependencies": {
+    "frisby": "^0.8.5",
+    "jasmine-node": "^1.14.5"
+  },
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "jasmine-node tests/*.js"
+  },
+  "author": "Shawn Aten",
+  "license": "ISC"
+}

@@ -1,0 +1,7 @@
+FROM ubuntu
+
+RUN apt-get update && apt-get install -y git vim
+
+WORKDIR ~/
+
+RUN git clone git://github.com/amix/vimrc.git ~/.vim_runtime && sh ~/.vim_runtime/install_basic_vimrc.sh
