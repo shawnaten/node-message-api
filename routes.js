@@ -31,7 +31,7 @@ module.exports = [{
         handler: UserController.createHandler
     }
 }, {
-    method: 'POST',
+    method: 'GET',
     path: '/user/verify',
     config: {
         auth: false,

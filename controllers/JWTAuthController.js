@@ -22,7 +22,7 @@ exports.validate = function(decoded, request, callback) {
         if (err || user === null) return callback(null, false);
 
         for(var i=0; i < user.tokens.length; i++)
-            if (user.tokens[i].jit == decoded.jit)
+            if (user.tokens[i].jti == decoded.jti)
                 return callback(null, true);
         return callback(null, false);
     }
