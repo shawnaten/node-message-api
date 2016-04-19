@@ -10,7 +10,9 @@ const DBConnection = require('./DBConnection');
 const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
-    _bankId: { type: Schema.Types.ObjectId, required: true },
+    name: { type: String, required: true },
+    nick: { type: String, required: true },
+    email: { type: String, required: true },
     password: { type: String, required: true },
     tokens: [ { deviceName: String, jti: String } ],
     verified: { type: Boolean, default: false, required: true },
@@ -41,21 +43,4 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
     });
 };
 
-const model = DBConnection.model('User', UserSchema);
-
-model.MockDB = [
-{
-    email: 'john@domain.com',
-        // 'secret'
-        password: '$2a$10$iqJSHD.BGr0E2IxQwYgJmeP3NvhPrXAeLSaGCj6IR/XU5QtjVu5Tm',
-        name: 'John Doe',
-        tokens: [
-        {
-            device_name: 'Nexus 5x',
-            jit: '90dd2cdf-a6f3-4643-8a1f-c52544b1c6a6'
-        }
-    ]
-}
-];
-
-module.exports = model;
+module.exports = DBConnection.model('User', UserSchema);

@@ -2,9 +2,7 @@ version: '2'
 
 services:
   hapi:
-    build:
-      context: ./
-      dockerfile: ./dockerfiles/hapi
+    image: shawnmaten/hapi
     links:
       - db:db
     ports:
@@ -18,30 +16,6 @@ services:
     environment:
       - AUTH=no
 
-  tests:
-    build:
-      context: ./
-      dockerfile: ./dockerfiles/tests
-    links:
-      - hapi:hapi
-    volumes:
-      - ./:/usr/src/app
-
-  dbload:
-    image: tutum/mongodb
-    links:
-      - db:db
-    volumes:
-      - ./:/usr/src/app
-    working_dir: /usr/src/app
-    command: >
-      mongoimport
-      --collection users
-      --db bank
-      --drop
-      --file ./misc/bank_db.json
-      --host db
-
   dbtest:
     image: tutum/mongodb
     links:
@@ -50,18 +24,3 @@ services:
       - ./:/usr/src/app
     working_dir: /usr/src/app
     command: /bin/bash
-
-  node:
-    image: node
-    volumes:
-      - ./:/usr/src/app
-    working_dir: /usr/src/app
-    command: /bin/bash
-    
-  vim:
-    build:
-      context: ./
-      dockerfile: ./dockerfiles/vim
-    volumes:
-      - ./:/usr/src/app
-    working_dir: /usr/src/app
