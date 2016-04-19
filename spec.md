@@ -21,7 +21,7 @@ curl -w '\n' 'http://107.170.11.25/user/verify?token=571658430c5cd3bf00290aa4'
 ```
 
 ## Delete User
-*Needs Basic authorization header.*
+*Needs basic authorization header.*
 
 POST /user/delete
 
@@ -29,4 +29,39 @@ POST /user/delete
 curl -w '\n' -u shawnmaten@gmail.com:1234password --request POST 'http://107.170.11.25/user/delete'
 ```
 
+## Get Auth Token
+*Needs basic authorization header.*
+
+GET /auth?device_name=DEVICE_NAME
+
+```
+curl -w '\n' -u shawnmaten@gmail.com:1234password 'http://107.170.11.25/auth?device_name=Test%20Device%201'
+```
+
+## Start Chat
+*Needs bearer authorization header.*
+
+POST /chat/start?topic=TOPIC
+
+```
+curl -w '\n' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjE0NjEwODYwMDU2NzUsImV4cCI6MTQ5MjYyMjAwNTY3NSwic3ViIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwiYXVkIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwianRpIjoiYmQzZGM1ZGQtYThmNy00NzMwLTkzYWItY2NjM2RjMDhmMjA2IiwiaWF0IjoxNDYxMDg2MDA1fQ.yrncsGnim2sIoQa_cuRECG_jBvrE6cd8W_5aRvHXqAE' --request POST 'http://107.170.11.25/chat/start?topic=Test%20Topic'
+```
+
+## Add Person to Chat
+*Needs bearer authorization header.*
+
+POST /chat/add?id=ID&email=EMAIL
+
+```
+curl -w '\n' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjE0NjEwODYwMDU2NzUsImV4cCI6MTQ5MjYyMjAwNTY3NSwic3ViIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwiYXVkIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwianRpIjoiYmQzZGM1ZGQtYThmNy00NzMwLTkzYWItY2NjM2RjMDhmMjA2IiwiaWF0IjoxNDYxMDg2MDA1fQ.yrncsGnim2sIoQa_cuRECG_jBvrE6cd8W_5aRvHXqAE' --request POST 'http://107.170.11.25/chat/add?id=3daa3984007aa306&email=shawnmaten%2B2@gmail.com'
+
+## Leave a Chat
+*Needs bearer authorization header.*
+
+POST /chat/leave
+
+```
+curl -w '\n' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjE0NjEwODYwMDU2NzUsImV4cCI6MTQ5MjYyMjAwNTY3NSwic3ViIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwiYXVkIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwianRpIjoiYmQzZGM1ZGQtYThmNy00NzMwLTkzYWItY2NjM2RjMDhmMjA2IiwiaWF0IjoxNDYxMDg2MDA1fQ.yrncsGnim2sIoQa_cuRECG_jBvrE6cd8W_5aRvHXqAE' --request POST 'http://107.170.11.25/chat/leave?id=3daa3984007aa306'
+```
+```
 

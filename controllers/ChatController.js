@@ -5,60 +5,25 @@ const Boom = require('boom');
 const Util = require('../Util');
 
 exports.startHandler = function (request, reply) {
-    var credentials = request.auth.credentials;
-    
-    var employee;
-    var apiUser;
-    var bankUser;
-    var chat;
+    var savedUser;
 
-    BankUserModel.find({ role: 'employee' }, findEmployee);
+    UserModel.findOne({ _id: request.auth.credentials.sub }, findUser);
 
-    function findEmployee(err, result) {
-        if (err || result === null)
-            return reply(Boom.badImplementation('db error'));
-        employee = result[Util.randomInt(0, result.length)];
-        UserModel.findOne({ _id: credentials.sub }, findUser);
+    function findUser(err, user) {
+        if (err || user === null) return reply(Boom.badImplementation('db error'));
+        else ChatModel.create({ _users: [ user._id ], topic: request.query.topic }, createChat);
     }
 
-    function findUser(err, result) {
-        if (err || result === null)
-            return reply(Boom.badImplementation('db error'));
-        apiUser = result;
-        BankUserModel.findOne({ _id: apiUser._bankId }, findBankUser);
-    }
-
-    function findBankUser(err, result) {
-        bankUser = result;
-
-        if (err || result === null)
-            return reply(Boom.badImplementation('db error'));
-        else if (bankUser.role != 'customer')
-            return reply(Boom.unauthorized('only customers may initiate chat'));
-        else
-            ChatModel.create({ 
-                _users: [employee._id, apiUser._id],
-                topic: request.query.topic
-                }, createChat);
-    }
-
-    function createChat(err, result) {
-        if (err || result === null)
-            return reply(Boom.badImplementation('db error'));
-        chat = result;
+    function createChat(err, chat) {
+        if (err || chat === null) return reply(Boom.badImplementation('db error'));
         reply({ id: chat._id });
     }
 }
 
 exports.listHandler = function(request, reply) {
-    var credentials = request.auth.credentials;
-    var user;
-    var chats;
+    ChatModel.find({ _users: request.auth.credentials.sub }, findChats);
 
-    ChatModel.find({ _users: credentials.sub }, findChats);
-
-    function findChats(err, result) {
-        chats = result;
+    function findChats(err, chats) {
         if (err || chats === null)
             return reply(Boom.badImplementation('db error'));
 
@@ -75,31 +40,62 @@ exports.listHandler = function(request, reply) {
     }
 }
 
-exports.removeHandler = function(request, reply) {
-    var credentials = request.auth.credentials;
+exports.leaveHandler = function(request, reply) {
+    ChatModel.findOne({ _id: request.query.id, _users: request.auth.credentials.sub }, findChat);
 
-    ChatModel.findOne({ _id: request.query.id, _users: credentials.sub }, findChat);
-
-    function findChat(err, result) {
+    function findChat(err, chat) {
         var users;
 
-        if (err || result === null)
-            return reply(Boom.badImplementation('db error'));
+        if (err || chat === null) return reply(Boom.badImplementation('db error'));
 
         chat = result;
         users = chat._users;
 
         users.splice(users.indexOf(credentials.sub), 1);
 
-        if (users.length == 1)
-            ChatModel.remove({ _id: chat._id }, removeChat);
-        else
-            reply('user removed from chat');
+        if (users.length == 0) ChatModel.remove({ _id: chat._id }, removeChat);
+        else chat.save(saveChat);
+    }
+
+    function saveChat(err) {
+        if (err) return reply(Boom.badImplementation('db error'));
+        else reply({ message: 'user removed from chat' });
     }
 
     function removeChat(err) {
-        if (err)
-            return reply(Boom.badImplementation('db error'));
-        reply('user removed and chat deleted');
+        if (err) return reply(Boom.badImplementation('db error'));
+        else reply({ message: 'user removed from chat' });
+    }
+}
+
+exports.addHandler = function(request, reply) {
+    var savedChat;
+
+    ChatModel.findOne({ _id: request.query.id, _users: request.auth.credentials.sub }, findChat);
+
+    function findChat(err, chat) {
+      savedChat = chat;
+
+      if (err) return reply(Boom.badImplementation(err));
+      else if (chat === null) return reply(Boom.badRequest({ messsage: 'no chat found' }));
+  
+      UserModel.findOne({ email: request.query.email }, findUser);
+    }
+
+    function findUser(err, user) {
+      if (err) return reply(Boom.badImplementation(err));
+      else if (user === null) return reply(Boom.badRequest({ messsage: 'no user found to add' }));
+      
+      for(var i=0; i<chat._users.length; i++)
+        if (chat._users[i] == user._id)
+          return reply(Boom.badRequest({ messsage: 'user already in chat' }));
+        
+      chat._users.push(user._id);
+      chat.save(saveChat);
+    }
+    
+    function saveChat(err) {
+        if (err) return reply(Boom.badImplementation('db error'));
+        else reply({ message: 'user removed from chat' });
     }
 }

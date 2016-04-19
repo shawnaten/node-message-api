@@ -10,7 +10,7 @@ exports.validate = function(request, email, password, callback) {
     function findUser(err, user) {
         savedUser = user;
         
-        if (err || user === null) callback(err, false);
+        if (err || user === null || !user.verified) callback(err, false);
         else user.comparePassword(password, validate); 
     };
 
