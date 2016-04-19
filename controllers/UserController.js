@@ -101,13 +101,12 @@ exports.verifyHandler = function (request, reply) {
 exports.deleteHandler = function (request, reply) {
   var savedUser;
 
-  UserModel.findOne({ email: request.auth.credentials.email }, findUser);
+  UserModel.findOne({ _id: request.auth.credentials.id }, findUser);
 
   function findUser(err, user) {
-    savedUser = result;
+    savedUser = user;
 
-    if (err) return reply(Boom.badImplementation({ message: 'db error' }));
-    else if (user === null) return reply(Boom.badImplementation({ message: 'db error' }));
+    if (err || user === null) return reply(Boom.badImplementation(err));
     else UserModel.remove({ _id: user._id }, deleteUser);
   }
 

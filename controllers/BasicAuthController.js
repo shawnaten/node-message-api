@@ -1,36 +1,25 @@
 const Bcrypt = require('bcrypt');
 const UserModel = require('../models/UserModel');
-const BankUserModel = require('../models/BankUserModel');
 
 // validate function for basic email-password auth
 exports.validate = function(request, email, password, callback) {
-    var bankUser;
-    var user;
+    var savedUser;
 
-    BankUserModel.findOne({ email: email }, findBankUser);
-
-    function findBankUser(err, result) {
-        bankUser = result;
-
-        if (err) callback(err, false);
-        else if (bankUser === null) callback(err, false);
-        else UserModel.findOne({ _bankId: bankUser._id }, findUser);
-    };
+    UserModel.findOne({ email: email }, findUser);
     
-    function findUser(err, result) {
-        user = result;
+    function findUser(err, user) {
+        savedUser = user;
         
-        if (err) callback(err, false);
-        else if (user === null) callback(err, false);
+        if (err || user === null) callback(err, false);
         else user.comparePassword(password, validate); 
     };
 
     function validate(err, isValid) {
-        callback(err, isValid, { id: user._id });
+        callback(err, isValid, { id: savedUser._id });
     };
 };
 
 exports.testHandler = function(request, reply) {
-    return reply('login auth success').header("Authorization", request.headers.authorization);
+    return reply({ message: 'login success' });
 };
 
