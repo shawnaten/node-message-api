@@ -21,7 +21,7 @@ curl -w '\n' 'http://107.170.11.25/user/verify?token=571658430c5cd3bf00290aa4'
 ```
 
 ## Delete User
-Needs Basic authorization header.*
+*Needs Basic authorization header.*
 
 POST /user/delete
 
