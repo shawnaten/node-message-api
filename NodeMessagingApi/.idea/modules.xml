@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../../../8-2016-spring/niu/node-message-api/NodeMessagingApi/NodeMessagingApi.iml" filepath="$PROJECT_DIR$/../../../../8-2016-spring/niu/node-message-api/NodeMessagingApi/NodeMessagingApi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../../8-2016-spring/niu/node-message-api/NodeMessagingApi/app/app.iml" filepath="$PROJECT_DIR$/../../../../8-2016-spring/niu/node-message-api/NodeMessagingApi/app/app.iml" />
+    </modules>
+  </component>
+</project>

@@ -2,7 +2,9 @@ version: '2'
 
 services:
   hapi:
-    image: shawnmaten/hapi
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/hapi
     links:
       - db:db
     ports:

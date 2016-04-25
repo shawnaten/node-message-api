@@ -3,10 +3,10 @@ FROM node
 COPY controllers /usr/src/app/controllers
 COPY misc /usr/src/app/misc
 COPY models /usr/src/app/models
-COPY nodemon.json package.json routes.js server.js Util.js /usr/src/app/
+COPY package.json nodemon.json routes.js server.js Util.js /usr/src/app/
 
 WORKDIR /usr/src/app
 
-RUN npm install --upgrade && npm install -g nodemon
+RUN npm install && npm install -g nodemon
 
 CMD ["npm", "start"]

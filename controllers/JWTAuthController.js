@@ -54,8 +54,8 @@ exports.authHandler = function (request, reply) {
       jti: jti
     });
 
-  user.save(saveUser);
-}
+    user.save(saveUser);
+  }
 
   function saveUser(err) {
     if (err) return reply(Boom.badImplementation('db error'));
@@ -67,7 +67,7 @@ exports.authHandler = function (request, reply) {
       aud: credentials.id,
       jti: jti
     };
-    
+
     var token = JWT.sign(payload, exports.secret);
     reply( {'access_token': token } );
   }
