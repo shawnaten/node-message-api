@@ -39,7 +39,7 @@ module.exports = [{
     }
 }, {
     method: 'POST', 
-    path: '/chat/support/start',
+    path: '/chat/start',
     handler: ChatController.startHandler
 }, {
     method: 'POST', 
@@ -50,12 +50,16 @@ module.exports = [{
     }
 }, {
     method: 'GET', 
-    path: '/chat/support/list',
+    path: '/chat/list',
     handler: ChatController.listHandler
 }, {
     method: 'POST',
-    path: '/chat/support/remove',
-    handler: ChatController.removeHandler
+    path: '/chat/leave',
+    handler: ChatController.leaveHandler
+}, {
+    method: 'POST',
+    path: '/chat/add',
+    handler: ChatController.addHandler
 }, {
     method: 'POST',
     path: '/message/post',
