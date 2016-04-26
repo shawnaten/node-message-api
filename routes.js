@@ -4,6 +4,8 @@ const UserController = require('./controllers/UserController');
 const ChatController = require('./controllers/ChatController');
 const MessageController = require('./controllers/MessageController');
 const BroadcastController = require('./controllers/BroadcastController');
+const DirectMessageController = require('./controllers/DirectMessageController');
+const KeyController = require('./controllers/KeyController');
 
 module.exports = [{	
   method: 'GET',
@@ -62,19 +64,27 @@ module.exports = [{
   handler: ChatController.addHandler
 }, {
   method: 'POST',
-  path: '/message/post',
-  handler: MessageController.postHandler
-}, {
-  method: 'GET',
-  path: '/message/list',
-  handler: MessageController.listHandler
-}, {
-  method: 'POST',
   path: '/broadcast/post',
   handler: BroadcastController.postHandler
 }, {
   method: 'GET',
   path: '/broadcast/list',
   handler: BroadcastController.listHandler
+}, {
+  method: 'POST',
+  path: '/message/send',
+  handler: DirectMessageController.sendHandler
+}, {
+  method: 'GET',
+  path: '/message/list',
+  handler: DirectMessageController.listHandler
+}, {
+  method: 'GET',
+  path: '/message/key',
+  handler: KeyController.getHandler
+}, {
+  method: 'POST',
+  path: '/message/key',
+  handler: KeyController.addHandler
 }
 ];
