@@ -4,21 +4,34 @@ The service is running at <http://107.170.11.25/>.
 
 Some endpoints need authorization headers. For each you add an "Authorization" header key and some value. For basic auth the key is "Basic ENCODED_CREDENTIALS" where ENCODED_CREDENTIALS is the base64 encoding string "email:password". For token auth the key is "Bearer TOKEN" where TOKEN is the string returned from the auth endpoint. The auth endpoint should be thought of as authenticating a device for access. Your app should save the token and not require the user to login (make a call to auth) each time. In the examples below curl is used so we do not manually apply the authorization headers. You may have to depending on what tools you use in Android however.
 
+```
+BASE_URL='http://107.170.11.25'
+NAME_1='First_Person'
+NICK_1='fperson'
+EMAIL_1='first.person@maildrop.cc'
+NAME_2='Second_Person'
+NICK_2='sperson'
+EMAIL_2='second.person@maildrop.cc'
+PASSWORD='1234password'
+DEVICE_NAME='Test_Device'
+TOPIC='Test_Topic'
+```
+
 ## Create User
 
 POST /user/create?name=NAME&nick=NICK&email=EMAIL&password=PASSWORD
 
 ```
-curl -w '\n' --request POST 'http://107.170.11.25/user/create?name=Shawn%20Aten&nick=saten&email=shawnmaten@gmail.com&password=1234password'
+# Create 2 accounts
+
+curl -X POST "$BASE_URL/user/create?name=$NAME_1&nick=$NICK_1&email=$EMAIL_1&password=$PASSWORD"
+
+curl -X POST "$BASE_URL/user/create?name=$NAME_2&nick=$NICK_2&email=$EMAIL_2&password=$PASSWORD"
 ```
 
 ## Verify User
 
 GET /user/verify?token=TOKEN
-
-```
-curl -w '\n' 'http://107.170.11.25/user/verify?token=571658430c5cd3bf00290aa4'
-```
 
 ## Delete User
 *Needs basic authorization header.*
@@ -26,7 +39,7 @@ curl -w '\n' 'http://107.170.11.25/user/verify?token=571658430c5cd3bf00290aa4'
 POST /user/delete
 
 ```
-curl -w '\n' -u shawnmaten@gmail.com:1234password --request POST 'http://107.170.11.25/user/delete'
+curl -u $EMAIL_1:$PASSWORD -X POST "$BASE_URL/user/delete"
 ```
 
 ## Get Auth Token
@@ -35,7 +48,11 @@ curl -w '\n' -u shawnmaten@gmail.com:1234password --request POST 'http://107.170
 GET /auth?device_name=DEVICE_NAME
 
 ```
-curl -w '\n' -u shawnmaten@gmail.com:1234password 'http://107.170.11.25/auth?device_name=Test%20Device%201'
+# Save access token for first account
+
+ACCESS_TOKEN_1=`curl -u $EMAIL_1:$PASSWORD "$BASE_URL/auth?device_name=$DEVICE_NAME" | perl -pe 's/{"access_token":"(.+)"}/$1/'`
+
+ACCESS_TOKEN_2=`curl -u $EMAIL_2:$PASSWORD "$BASE_URL/auth?device_name=$DEVICE_NAME" | perl -pe 's/{"access_token":"(.+)"}/$1/'`
 ```
 
 ## Start Chat
@@ -44,7 +61,7 @@ curl -w '\n' -u shawnmaten@gmail.com:1234password 'http://107.170.11.25/auth?dev
 POST /chat/start?topic=TOPIC
 
 ```
-curl -w '\n' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjE0NjEwODYwMDU2NzUsImV4cCI6MTQ5MjYyMjAwNTY3NSwic3ViIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwiYXVkIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwianRpIjoiYmQzZGM1ZGQtYThmNy00NzMwLTkzYWItY2NjM2RjMDhmMjA2IiwiaWF0IjoxNDYxMDg2MDA1fQ.yrncsGnim2sIoQa_cuRECG_jBvrE6cd8W_5aRvHXqAE' --request POST 'http://107.170.11.25/chat/start?topic=Test%20Topic'
+CHAT_ID=`curl -H "Authorization: Bearer $ACCESS_TOKEN_1" -X POST "$BASE_URL/chat/start?topic=$TOPIC" | perl -pe 's/{"id":"(.+)"}/$1/'`
 ```
 
 ## Add Person to Chat
@@ -53,7 +70,8 @@ curl -w '\n' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJp
 POST /chat/add?id=ID&email=EMAIL
 
 ```
-curl -w '\n' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjE0NjEwODYwMDU2NzUsImV4cCI6MTQ5MjYyMjAwNTY3NSwic3ViIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwiYXVkIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwianRpIjoiYmQzZGM1ZGQtYThmNy00NzMwLTkzYWItY2NjM2RjMDhmMjA2IiwiaWF0IjoxNDYxMDg2MDA1fQ.yrncsGnim2sIoQa_cuRECG_jBvrE6cd8W_5aRvHXqAE' --request POST 'http://107.170.11.25/chat/add?id=3daa3984007aa306&email=shawnmaten%2B2@gmail.com'
+curl -H "Authorization: Bearer $ACCESS_TOKEN_1" -X POST "$BASE_URL/chat/add?id=$CHAT_ID&email=$EMAIL_2"
+```
 
 ## Leave a Chat
 *Needs bearer authorization header.*
@@ -61,7 +79,5 @@ curl -w '\n' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJp
 POST /chat/leave
 
 ```
-curl -w '\n' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjE0NjEwODYwMDU2NzUsImV4cCI6MTQ5MjYyMjAwNTY3NSwic3ViIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwiYXVkIjoiNTcxNjY3MTliNTQ0ZjM0ODAwNTdjZmMzIiwianRpIjoiYmQzZGM1ZGQtYThmNy00NzMwLTkzYWItY2NjM2RjMDhmMjA2IiwiaWF0IjoxNDYxMDg2MDA1fQ.yrncsGnim2sIoQa_cuRECG_jBvrE6cd8W_5aRvHXqAE' --request POST 'http://107.170.11.25/chat/leave?id=3daa3984007aa306'
+curl -H "Authorization: Bearer $ACCESS_TOKEN_2" -X POST "$BASE_URL/chat/leave?id=$CHAT_ID"
 ```
-```
-
