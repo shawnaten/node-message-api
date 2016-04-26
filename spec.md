@@ -48,7 +48,11 @@ GET /user/verify?token=TOKEN
 POST /user/delete
 
 ```
+# Delete both users
+
 curl -u $EMAIL_1:$PASSWORD -X POST "$BASE_URL/user/delete"
+
+curl -u $EMAIL__2:$PASSWORD -X POST "$BASE_URL/user/delete"
 ```
 
 # Auth Endpoints
