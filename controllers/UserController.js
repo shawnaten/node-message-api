@@ -74,7 +74,7 @@ exports.verifyHandler = function (request, reply) {
     savedToken = token;
 
     if (err) return reply(Boom.badImplementation({ message: 'db error' }));
-    if (token === null) return reply(boom.badRequest({ message: 'invalid token' }));
+    if (token === null) return reply(Boom.badRequest({ message: 'invalid token' }));
     else UserModel.findOne({ _id: token._userId }, findUser);
   }
 
