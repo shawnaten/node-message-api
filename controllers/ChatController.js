@@ -48,10 +48,9 @@ exports.leaveHandler = function(request, reply) {
 
     if (err || chat === null) return reply(Boom.badImplementation('db error'));
 
-    chat = result;
     users = chat._users;
 
-    users.splice(users.indexOf(credentials.sub), 1);
+    users.splice(users.indexOf(request.auth.credentials.sub), 1);
 
     if (users.length == 0) ChatModel.remove({ _id: chat._id }, removeChat);
     else chat.save(saveChat);
@@ -86,16 +85,16 @@ exports.addHandler = function(request, reply) {
     if (err) return reply(Boom.badImplementation(err));
     else if (user === null) return reply(Boom.badRequest({ messsage: 'no user found to add' }));
 
-    for(var i=0; i<chat._users.length; i++)
-      if (chat._users[i] == user._id)
+    for(var i=0; i<savedChat._users.length; i++)
+      if (savedChat._users[i] == user._id)
         return reply(Boom.badRequest({ messsage: 'user already in chat' }));
 
-    chat._users.push(user._id);
-    chat.save(saveChat);
+    savedChat._users.push(user._id);
+    savedChat.save(saveChat);
   }
 
   function saveChat(err) {
     if (err) return reply(Boom.badImplementation('db error'));
-    else reply({ message: 'user removed from chat' });
+    else reply({ message: 'user added to chat' });
   }
 }
