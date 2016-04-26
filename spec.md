@@ -1,6 +1,6 @@
 # API Specification
 
-The service is running at <http://107.170.11.25/>.
+The service is running at <http://104.131.115.246/>.
 
 Some endpoints need authorization headers. For each you add an "Authorization" header key and some value. For basic auth the key is "Basic ENCODED_CREDENTIALS" where ENCODED_CREDENTIALS is the base64 encoding string "email:password". For token auth the key is "Bearer TOKEN" where TOKEN is the string returned from the auth endpoint. The auth endpoint should be thought of as authenticating a device for access. Your app should save the token and not require the user to login (make a call to auth) each time. In the examples below curl is used so we do not manually apply the authorization headers. You may have to depending on what tools you use in Android however.
 
@@ -9,8 +9,8 @@ Some endpoints need authorization headers. For each you add an "Authorization" h
 # Replace the values with whatever you like
 # Emails can be accessed at https://maildrop.cc/
 
-BASE_URL='http://107.170.11.25'
-NAME_1='First_Person'
+BASE_URL='http://104.131.115.246'
+NAME_1='First_Person'do
 NICK_1='fperson'
 EMAIL_1='first.person@maildrop.cc'
 NAME_2='Second_Person'
