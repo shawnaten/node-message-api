@@ -2,21 +2,21 @@ version: '2'
 
 services:
   hapi:
-    build:
-      context: ./
-      dockerfile: ./dockerfiles/hapi
+    extends:
+      file: common.yml
+      service: hapi
     links:
       - db:db
-    ports:
-      - 80:80
     volumes:
       - ./:/usr/src/app
-    env_file: .env
+    environment:
+      - ENV=dev
+      - BASE_URL=http://192.168.99.100
 
   db:
-    image: tutum/mongodb
-    environment:
-      - AUTH=no
+    extends:
+      file: common.yml
+      service: db
 
   dbtest:
     image: tutum/mongodb

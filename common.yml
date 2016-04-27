@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  hapi:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/hapi
+    ports:
+      - 80:80
+    env_file: common.env
+
+  db:
+    image: tutum/mongodb
+    environment:
+      - AUTH=no

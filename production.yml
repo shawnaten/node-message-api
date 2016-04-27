@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  hapi:
+    extends:
+      file: common.yml
+      service: hapi
+    links:
+      - db:db
+    environment:
+      - ENV=prod
+      - BASE_URL=http://104.131.115.246
+
+  db:
+    extends:
+      file: common.yml
+      service: db
