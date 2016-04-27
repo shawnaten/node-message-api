@@ -7,7 +7,28 @@ const BroadcastController = require('./controllers/BroadcastController');
 const DirectMessageController = require('./controllers/DirectMessageController');
 const KeyController = require('./controllers/KeyController');
 
-module.exports = [{	
+module.exports = [{
+  method: 'GET',
+  path: '/',
+  config: {
+    auth: false,
+    handler: function(request, reply) {
+      var message = 'UTSA CS 4913'
+      var fruits = ['🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🍈','🍒',
+        '🍑','🍍'];
+      var response = '';
+
+      for (var i=0; i < 1000; i++) {
+        for (var j=0; j < fruits.length; j++)
+          response += fruits[Math.floor(Math.random() * fruits.length)];
+        if (i % 10 == 0)
+          response += message;
+      }
+
+      reply(response);
+    }
+  }
+}, {
   method: 'GET',
   path: '/auth',
   config: {
@@ -15,16 +36,13 @@ module.exports = [{
     handler: JWTAuthController.authHandler
   }
 }, {
-  method: 'POST', 
-  path: '/auth/test/login',
-  config: {
-    auth: 'simple',
-    handler: BasicAuthController.testHandler
-  }
-}, {
-  method: 'POST', 
-  path: '/auth/test/token',
-  handler: JWTAuthController.testHandler
+  method: 'GET',
+  path: '/auth/list',
+  handler: JWTAuthController.listHandler
+},{
+  method: 'POST',
+  path: '/auth',
+  handler: JWTAuthController.removeHandler
 }, {
   method: 'POST',
   path: '/user/create',
@@ -40,18 +58,18 @@ module.exports = [{
     handler: UserController.verifyHandler
   }
 }, {
-  method: 'POST', 
+  method: 'POST',
   path: '/chat/start',
   handler: ChatController.startHandler
 }, {
-  method: 'POST', 
+  method: 'POST',
   path: '/user/delete',
   config: {
     auth: 'simple',
     handler: UserController.deleteHandler
   }
 }, {
-  method: 'GET', 
+  method: 'GET',
   path: '/chat/list',
   handler: ChatController.listHandler
 }, {
@@ -62,14 +80,6 @@ module.exports = [{
   method: 'POST',
   path: '/chat/add',
   handler: ChatController.addHandler
-}, {
-  method: 'POST',
-  path: '/broadcast/post',
-  handler: BroadcastController.postHandler
-}, {
-  method: 'GET',
-  path: '/broadcast/list',
-  handler: BroadcastController.listHandler
 }, {
   method: 'POST',
   path: '/message/send',

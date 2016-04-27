@@ -45,12 +45,21 @@ exports.authHandler = function (request, reply) {
   UserModel.findOne({ _id: credentials.id }, findUser);
 
   function findUser(err, result) {
+    var tokens;
     user = result;
 
-    if (err || user === null) return reply(Boom.badImplementation('db error'));
+    if (err) return reply(Boom.badImplementation(err));
+    else if (user === null)
+      return reply(Boom.badImplementation('user was null'));
+
+    tokens = user.tokens;
+    for (var i = 0; i < tokens.length; i++) {
+      if (tokens[i].deviceName == deviceName)
+        return reply(Boom.badRequest('device name already used'));
+    }
 
     user.tokens.push({
-      device_name: deviceName,
+      deviceName: deviceName,
       jti: jti
     });
 
@@ -70,5 +79,56 @@ exports.authHandler = function (request, reply) {
 
     var token = JWT.sign(payload, exports.secret);
     reply( {'access_token': token } );
+  }
+};
+
+exports.listHandler = function (request, reply) {
+  UserModel.findOne({ _id: request.auth.credentials.sub }, findUser);
+
+  function findUser(err, user) {
+    var devices = [];
+
+    if (err) return reply(Boom.badImplementation(err));
+    else if (user === null)
+      return reply(Boom.badImplementation('user was null'));
+
+    for (var i=0; i < user.tokens.length; i++)
+      devices.push(user.tokens[i].deviceName);
+    return reply({ tokens: devices });
+  }
+};
+
+exports.removeHandler = function (request, reply) {
+  var deviceName = request.query.device_name;
+
+  UserModel.findOne({ _id: request.auth.credentials.sub }, findUser);
+
+  function findUser(err, user) {
+    var i;
+    var tokens;
+
+    if (err) return reply(Boom.badImplementation(err));
+    else if (user === null)
+      return reply(Boom.badImplementation('user was null'));
+
+    tokens = user.tokens;
+    for (i=0; i < tokens.length; i++) {
+      console.log("++"+tokens[i].deviceName);
+      console.log("--"+deviceName);
+      if (tokens[i].deviceName == deviceName)
+        break;
+    }
+
+    if (i == tokens.length)
+      return reply(Boom.badRequest({ message: 'device not found' }))
+
+    tokens.splice(i, 1);
+    user.tokens = tokens;
+    user.save(saveUser);
+  }
+
+  function saveUser(err) {
+    if (err) return reply(Boom.badImplementation(err));
+    return reply({ message: 'device removed' });
   }
 };

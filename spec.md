@@ -10,7 +10,7 @@ Some endpoints need authorization headers. For each you add an "Authorization" h
 # Emails can be accessed at https://maildrop.cc/
 
 BASE_URL='http://104.131.115.246'
-NAME_1='First_Person'do
+NAME_1='First_Person'
 NICK_1='fperson'
 EMAIL_1='first.person@maildrop.cc'
 NAME_2='Second_Person'
@@ -56,9 +56,10 @@ curl -u $EMAIL__2:$PASSWORD -X POST "$BASE_URL/user/delete"
 ```
 
 # Auth Endpoints
-*All of these need basic authorization header.*
 
 ## Get Auth Token
+*Needs basic authorization header.*
+*Device name must be unique.*
 
 GET /auth?device_name=DEVICE_NAME
 
@@ -68,6 +69,24 @@ GET /auth?device_name=DEVICE_NAME
 ACCESS_TOKEN_1=`curl -u $EMAIL_1:$PASSWORD "$BASE_URL/auth?device_name=$DEVICE_NAME" | perl -pe 's/{"access_token":"(.+)"}/$1/'`
 
 ACCESS_TOKEN_2=`curl -u $EMAIL_2:$PASSWORD "$BASE_URL/auth?device_name=$DEVICE_NAME" | perl -pe 's/{"access_token":"(.+)"}/$1/'`
+```
+
+## List Auth Tokens
+*Needs bearer authorization header.*
+
+GET /auth/list
+
+```
+curl -H "Authorization: Bearer $ACCESS_TOKEN_1" "$BASE_URL/auth/list"
+```
+
+## Remove Auth Token
+*Needs bearer authorization header.*
+
+POST /auth?device_name=DEVICE_NAME
+
+```
+curl -X POST -H "Authorization: Bearer $ACCESS_TOKEN_1" "$BASE_URL/auth?device_name=$DEVICE_NAME"
 ```
 
 # Direct Message Endpoints
