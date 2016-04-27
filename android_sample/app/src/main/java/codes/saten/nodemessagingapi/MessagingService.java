@@ -1,5 +1,6 @@
 package codes.saten.nodemessagingapi;
 
+import codes.saten.nodemessagingapi.model.AuthListResponse;
 import codes.saten.nodemessagingapi.model.AuthResponse;
 import codes.saten.nodemessagingapi.model.BaseResponse;
 import codes.saten.nodemessagingapi.model.ChatListResponse;
@@ -26,6 +27,13 @@ public interface MessagingService {
     @GET("auth")
     Call<AuthResponse> auth(@Header("Authorization") String basicAuth,
                             @Query("device_name") String deviceName);
+
+    @POST("auth")
+    Call<AuthListResponse> authRemove(@Header("Authorization") String tokenAuth,
+                                      @Query("device_name") String deviceName);
+
+    @GET("auth/list")
+    Call<AuthListResponse> authList(@Header("Authorization") String tokenAuth);
 
     // direct message endpoints
     @POST("message/send")

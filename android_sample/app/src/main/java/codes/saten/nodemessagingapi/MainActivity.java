@@ -1,5 +1,7 @@
 package codes.saten.nodemessagingapi;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,7 +28,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String BASE_URL_DEV = "http://192.168.99.100/";
     public static final String BASE_URL_PROD = "http://104.131.115.246/";
 
+    public static final String TOKEN_KEY = "tokenKey";
+
     private MessagingService messagingService;
+    private String token;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -67,10 +72,25 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         messagingService = retrofit.create(MessagingService.class);
+
+        // To retrieve saved auth token
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        token = prefs.getString(TOKEN_KEY, null);
     }
 
     public MessagingService getMessagingService() {
         return messagingService;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+        // To save auth token
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit().putString(TOKEN_KEY, token).apply();
     }
 
     /*
@@ -150,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     return new CreateUserFragment();
+                case 1:
+                    return new LoginAuthFragment();
                 default:
                     return PlaceholderFragment.newInstance(position + 1);
             }
@@ -157,8 +179,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 2 total pages.
+            return 2;
         }
 
         @Override
@@ -167,11 +189,9 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return "Create User";
                 case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
+                    return "Login / Auth";
+                default: return "Tab " + Integer.toString(position + 1);
             }
-            return null;
         }
     }
 }
