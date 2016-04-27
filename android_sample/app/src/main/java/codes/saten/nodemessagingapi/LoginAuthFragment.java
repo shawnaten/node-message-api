@@ -33,6 +33,8 @@ public class LoginAuthFragment extends Fragment implements View.OnClickListener,
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // LOOK HERE
+        // We get the service from MainActivity, don't create multiple instances
         messagingService = ((MainActivity) getActivity()).getMessagingService();
     }
 
@@ -60,6 +62,8 @@ public class LoginAuthFragment extends Fragment implements View.OnClickListener,
 
         super.onResume();
 
+        // LOOK HERE
+        // We check if the token was saved in SharedPreferences i.e. we logged in already
         if (activity.getToken() == null)
             authStatus.setText("App is NOT authorized.");
         else
@@ -68,12 +72,18 @@ public class LoginAuthFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
+        // LOOK HERE
+        // Create auth header
         String basicAuthHeader = AuthHeaders.genBasicAuthHeader(email.getText().toString(),
                 password.getText().toString());
 
+        // LOOK HERE
+        // Make call to endpoint
         messagingService.auth(basicAuthHeader, android.os.Build.MODEL).enqueue(this);
     }
 
+    // LOOK HERE
+    // Handles response from service
     @Override
     public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
         if (response.body() != null) {
@@ -86,6 +96,8 @@ public class LoginAuthFragment extends Fragment implements View.OnClickListener,
                     Toast.LENGTH_SHORT).show();
     }
 
+    // LOOK HERE
+    // Handles error using service
     @Override
     public void onFailure(Call<AuthResponse> call, Throwable t) {
         t.printStackTrace();

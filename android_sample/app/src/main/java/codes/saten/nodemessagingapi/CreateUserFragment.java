@@ -25,6 +25,8 @@ public class CreateUserFragment extends Fragment implements View.OnClickListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // LOOK HERE
+        // We get the service from MainActivity, don't create multiple instances
         messagingService = ((MainActivity) getActivity()).getMessagingService();
     }
 
@@ -49,10 +51,14 @@ public class CreateUserFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
+        // LOOK HERE
+        // Make call to endpoint
         messagingService.createUser(name.getText().toString(), nick.getText().toString(),
                 email.getText().toString(), password.getText().toString()).enqueue(this);
     }
 
+    // LOOK HERE
+    // Handles response from service
     @Override
     public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
         if (response.body() != null)
@@ -63,6 +69,8 @@ public class CreateUserFragment extends Fragment implements View.OnClickListener
                     Toast.LENGTH_SHORT).show();
     }
 
+    // LOOK HERE
+    // Handles error using service
     @Override
     public void onFailure(Call<BaseResponse> call, Throwable t) {
         t.printStackTrace();

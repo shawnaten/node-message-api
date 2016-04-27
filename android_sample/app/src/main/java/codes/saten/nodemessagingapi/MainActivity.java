@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        // LOOK HERE
+        // Create the retrofit messaging service
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL_PROD) // Dr. Niu's class should use BASE_URL_PROD
                 .addConverterFactory(GsonConverterFactory.create())
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         messagingService = retrofit.create(MessagingService.class);
 
+        // LOOK HERE
         // To retrieve saved auth token
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         token = prefs.getString(TOKEN_KEY, null);
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setToken(String token) {
         this.token = token;
+        // LOOK HERE
         // To save auth token
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit().putString(TOKEN_KEY, token).apply();
