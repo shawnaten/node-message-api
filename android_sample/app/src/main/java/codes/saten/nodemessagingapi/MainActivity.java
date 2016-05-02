@@ -176,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
                     return new CreateUserFragment();
                 case 1:
                     return new LoginAuthFragment();
+                case 2:
+                    return new MessagesFragment();
                 default:
                     return PlaceholderFragment.newInstance(position + 1);
             }
@@ -183,8 +185,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 2 total pages.
-            return 2;
+            // Show 3 total pages.
+            return 3;
         }
 
         @Override
@@ -194,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
                     return "Create User";
                 case 1:
                     return "Login / Auth";
+                case 2:
+                    return "Messages";
                 default: return "Tab " + Integer.toString(position + 1);
             }
         }

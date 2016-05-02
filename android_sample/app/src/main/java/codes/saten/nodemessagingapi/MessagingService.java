@@ -38,7 +38,7 @@ public interface MessagingService {
     // direct message endpoints
     @POST("message/send")
     Call<BaseResponse> sendMessage(@Header("Authorization") String tokenAuth,
-                                   @Query("email") String email);
+                                   @Query("email") String email, @Query("text") String text);
 
     @GET("message/list")
     Call<MessageListResponse> listMessages(@Header("Authorization") String tokenAuth);
