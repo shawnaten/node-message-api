@@ -2,6 +2,7 @@ package codes.saten.nodemessagingapi.model;
 
 public class Message {
     private String id;
+    private String from;
     private String date;
     private String text;
 
@@ -15,5 +16,9 @@ public class Message {
 
     public String getText() {
         return text;
+    }
+
+    public String getFrom() {
+        return from;
     }
 }
