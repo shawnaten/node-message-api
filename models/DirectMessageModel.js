@@ -4,8 +4,9 @@ const Schema = Mongoose.Schema;
 const DBConnection = require('./DBConnection');
 
 const DirectMessageSchema = new Schema({
-  _userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  createdAt: { type: Date, expires: '10m', default: Date.now },
+  _userIdTo: { type: Schema.Types.ObjectId, required: true },
+  _userIdFrom: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  createdAt: { type: Date, expires: '1d', default: Date.now },
   text: { type: String, required: true }
 });
 

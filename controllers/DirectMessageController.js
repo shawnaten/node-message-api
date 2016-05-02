@@ -11,7 +11,8 @@ exports.sendHandler = function (request, reply) {
   function findUser(err, user) {
     if (err) console.log(err);
     if (err || user === null) return reply(Boom.badRequest({ message: 'no user found' }));
-    DirectMessageModel.create({ _userId: [ request.auth.credentials.sub ], text: request.query.text }, createMessage);
+    DirectMessageModel.create({ _userIdFrom: request.auth.credentials.sub, _userIdTo: user._id,
+      text: request.query.text }, createMessage);
   }
 
   function createMessage(err, message) {
@@ -24,20 +25,18 @@ exports.sendHandler = function (request, reply) {
 exports.listHandler = function(request, reply) {
   var savedMessages;
 
-  DirectMessageModel.find({ _userId: request.auth.credentials.sub }, findMessages);
+  DirectMessageModel.find({ _userIdTo: request.auth.credentials.sub }).populate('_userIdFrom').exec(findMessages);
 
   function findMessages(err, messages) {
-    var messageIds = [];
-
     if (err) console.log(err);
     if (err || messages === null) return reply(Boom.badRequest({ message: 'unable to retrieve messages' }));
-    if (messages.length == 0) return reply({ messages: [] });
+    if (messages === null) return reply({ messages: [] });
 
     for (var i = 0; i < messages.length; i++) {
       var fullMessage = messages[i];
-      messageIds.push(fullMessage._id);
       messages[i] = {
         id: fullMessage._id,
+        from: fullMessage._userIdFrom.email,
         text: fullMessage.text,
         date: fullMessage.createdAt
       };
@@ -45,7 +44,7 @@ exports.listHandler = function(request, reply) {
 
     savedMessages = messages;
 
-    DirectMessageModel.remove({ _id: messageIds }, removeMessages);
+    DirectMessageModel.find({ _userIdTo: request.auth.credentials.sub }).remove(removeMessages);
   }
 
   function removeMessages(err) {
