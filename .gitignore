@@ -1,5 +1,5 @@
 jniu-openrc.sh
-.env
+common.env
 .DS_Store
 node_modules
 *.tar
