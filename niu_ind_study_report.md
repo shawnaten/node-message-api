@@ -26,7 +26,7 @@ Install Docker by following these [instructions](https://docs.docker.com/engine/
 7. Look at the endpoint specifications in each repo to see the endpoints available and example curl commands to test them. They're in a file called `spec.md` in the root directory. Make sure you use the ip from step 1. For project 1 you must create users with information matching what's in `misc/bank_db.json`.
 
 ### Remote / Cloud Machines
-1. To deploy on an OpenStack cloud we will use docker-machine to create a remote VM and then control it just like above. Download your OpenStack RC file from Horizon and run the script. Then simply `docker-machine create -d openstack my-machine` and `eval $(docker-machine env my-machine)`. Then run the commands as before. This time docker-machine will send the commands to the cloud VM and start the service there.
+1. To deploy on an OpenStack cloud we will use docker-machine to create a remote VM and then control it just like above. Download your OpenStack RC file from Horizon and run the script. Then run `docker-machine create -d openstack my-machine` and `eval $(docker-machine env my-machine)`. Then run the commands as before. This time docker-machine will send the commands to the cloud VM and start the service there.
 2. To deploy to Digital Ocean first get an API token for your account. Then it's nearly the same as for OpenStack. Run `docker-machine create -d digitalocean --digitalocean-access-token <TOKEN> my-machine` and `eval $(docker-machine env my-machine)`.
 
 ## Project Details
